@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hogwarts Restaurant - Magical Dining Experience</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+           <a href="https://fontmeme.com/harry-potter-font/"><img src="https://fontmeme.com/permalink/260115/b536f750.png" alt="harry-potter-font" border="0"></a>
+        </div>
+        <div class="action-buttons">
+            <button class="btn btn-admin" onclick="openManageMenu()">Manage Menu</button>
+
+            <button class="btn btn-secondary" onclick="openSalesReport()">Monthly Sales</button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Gryffindor Section -->
+        <section class="house-section gryffindor">
+            <div class="house-header">
+                <h2>🦁 Gryffindor,s Menu</h2>
+                <p class="house-motto">Bravery & Bold Flavors</p>
+            </div>
+            <div class="menu-grid" id="gryffindor-menu"></div>
+        </section>
+
+        <!-- Slytherin Section -->
+        <section class="house-section slytherin">
+            <div class="house-header">
+                <h2>🐍 Slytherin,s Menu</h2>
+                <p class="house-motto">Ambitious & Refreshing</p>
+            </div>
+            <div class="menu-grid" id="slytherin-menu"></div>
+        </section>
+
+        <!-- Hufflepuff Section -->
+        <section class="house-section hufflepuff">
+            <div class="house-header">
+                <h2>🦡 Hufflepuff,s Menu</h2>
+                <p class="house-motto">Loyal & Traditional</p>
+            </div>
+            <div class="menu-grid" id="hufflepuff-menu"></div>
+        </section>
+
+        <!-- Ravenclaw Section -->
+        <section class="house-section ravenclaw">
+            <div class="house-header">
+                <h2>🦅 Ravenclaw,s Menu</h2>
+                <p class="house-motto">Wise & Grilled Perfection</p>
+            </div>
+            <div class="menu-grid" id="ravenclaw-menu"></div>
+        </section>
+    </main>
+
+    <!-- Shopping Cart Sidebar -->
+    <aside class="cart-sidebar" id="cart-sidebar">
+        <div class="cart-header">
+            <h2>🛒 Your Order</h2>
+            <button class="close-cart" onclick="toggleCart()">×</button>
+        </div>
+        <div class="cart-items" id="cart-items">
+            <p class="empty-cart">Your cart is empty</p>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <strong>Total: $<span id="cart-total">0.00</span></strong>
+            </div>
+            <div class="cart-actions">
+                <button class="btn btn-danger" onclick="clearCart()">Clear Cart</button>
+                <button class="btn btn-success" onclick="printBill()">Print/Download Bill</button>
+                <button class="btn btn-primary" onclick="openPayment()">Pay Now</button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Cart Toggle Button -->
+    <button class="cart-toggle" id="cart-toggle" onclick="toggleCart()">
+        🛒 <span id="cart-count">0</span>
+    </button>
+
+    <!-- Manage Menu Modal -->
+    <div class="modal" id="manage-menu-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Manage Menu</h2>
+                <button class="close-modal" onclick="closeManageMenu()">×</button>
+            </div>
+            <div class="modal-body">
+                <!-- Add New Item Form -->
+                <div class="crud-form">
+                    <h3>Add New Item</h3>
+                    <form id="add-item-form" onsubmit="addMenuItem(event)">
+                        <input type="text" id="item-name" placeholder="Item Name" required>
+                        <input type="number" id="item-price" placeholder="Price" step="0.01" min="0" required>
+                        <select id="item-house" required>
+                            <option value="">Select House</option>
+                            <option value="gryffindor">Gryffindor</option>
+                            <option value="slytherin">Slytherin</option>
+                            <option value="hufflepuff">Hufflepuff</option>
+                            <option value="ravenclaw">Ravenclaw</option>
+                        </select>
+                        <button type="submit" class="btn btn-primary">Add Item</button>
+                    </form>
+                </div>
+
+                <!-- Menu Items List -->
+                <div class="menu-items-list">
+                    <h3>Current Menu Items</h3>
+                    <div id="manage-menu-list"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div class="modal" id="payment-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Payment</h2>
+                <button class="close-modal" onclick="closePayment()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="payment-info">
+                    <p><strong>Total Amount: $<span id="payment-total">0.00</span></strong></p>
+                    <div class="qr-container">
+                        <div id="qr-code"></div>
+                    </div>
+                    <p class="payment-note">Scan QR code to complete payment</p>
+                    <button class="btn btn-success" onclick="completePayment()">Complete Payment</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sales Report Modal -->
+    <div class="modal" id="sales-report-modal">
+        <div class="modal-content large-modal">
+            <div class="modal-header">
+                <h2>Monthly Sales Report</h2>
+                <button class="close-modal" onclick="closeSalesReport()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="report-filters">
+                    <label>Select Month:</label>
+                    <input type="month" id="report-month" onchange="updateSalesReport()">
+                </div>
+                <div class="report-content" id="sales-report-content">
+                    <p>Select a month to view sales report</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Customer Feedback Modal -->
+<div id="feedback-modal" class="modal">
+    <div class="modal-content feedback-ui">
+        <h2>🪄 Customer Feedback</h2>
+
+        <form id="feedback-form">
+            <div class="rating">
+                <span data-value="5">★</span>
+                <span data-value="4">★</span>
+                <span data-value="3">★</span>
+                <span data-value="2">★</span>
+                <span data-value="1">★</span>
+            </div>
+
+            <textarea id="feedback-text"
+                placeholder="Tell us about your experience..."
+                required></textarea>
+
+            <div class="feedback-actions">
+                <button type="submit" class="btn-primary">Submit</button>
+                <button type="button" class="btn-secondary" onclick="closeFeedback()">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Trigger Button -->
+<button class="feedback-float-btn" onclick="openFeedback()">💬</button>
+<!-- Chatbot Bubble -->
+<button class="chatbot-bubble" onclick="toggleChatbot()">🧙‍♂️</button>
+
+<!-- Chatbot Window -->
+<div id="chatbot" class="chatbot">
+    <div class="chatbot-header">
+        <span>Hi! Iam TOM RIDDLE</span>
+        <button onclick="toggleChatbot()">×</button>
+    </div>
+
+    <div class="chatbot-messages" id="chatbot-messages"></div>
+
+    <form class="chatbot-input" onsubmit="sendChat(event)">
+        <input type="text" id="chat-input" placeholder="Ask me something..." required />
+        <button type="submit">➤</button>
+    </form>
+</div>
+<!-- Compact Premium Footer -->
+<!-- White Icons Social Footer -->
+<footer id="contactFooter">
+  <p class="contact-text">Contact Me @</p>
+  <div class="social-icons">
+    <a href="https://instagram.com/ragavv.17" target="_blank">
+      <img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" alt="Instagram">
+    </a>
+    <a href="https://github.com/ragav-1718" target="_blank">
+      <img src="https://static.vecteezy.com/system/resources/previews/025/270/403/non_2x/github-logo-icon-free-vector.jpg" alt="GitHub">
+    </a>
+    <a href="https://www.linkedin.com/in/sri-ragavendran-b-498472374/">
+      <img src="https://toppng.com/public/uploads/preview/linkedin-logo-png-image-11660255244sq19d2papm.png" alt="Email">
+    </a>
+  </div>
+</footer>
+
+    <!-- Print Bill (Hidden until printing) -->
+    <div class="print-bill" id="print-bill" style="display: none;"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
