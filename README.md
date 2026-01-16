@@ -20,7 +20,6 @@ Each house has its own curated menu and theme.
 - Add/remove items
 - Real-time total calculation
 - Cart sidebar with item count
-- Clear cart option
 
 ### 💳 Payment System
 - QR code–based payment
@@ -39,6 +38,7 @@ Each house has its own curated menu and theme.
 ### 🧙‍♂️ Chatbot (Tom Riddle)
 - Interactive chatbot assistant
 - Handles user queries inside the app
+- no api key available so it echo the input when running on localhost
 
 ### 🧾 Billing
 - Print or download bill using jsPDF
@@ -52,11 +52,10 @@ Each house has its own curated menu and theme.
 - **HTML5**
 - **CSS3**
 - **JavaScript (Vanilla JS)**
-- **QR Code Generator**
-- **jsPDF**
+- **node.js**
 
 ### Backend
--Local Storage
+- Local Storage
 - `server.js` for in website intergrated openai chatbot
 
 ---
