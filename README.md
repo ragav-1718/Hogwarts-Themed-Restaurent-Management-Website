@@ -1,5 +1,6 @@
 # Hogwarts-Themed-Restaurent-Management-Website
 # 🧙‍♂️ Hogwarts Restaurant – Magical Dining Experience
+developed for computer billing system
 
 A Harry Potter–themed restaurant web application that offers an interactive and magical dining experience.  
 Customers can browse house-wise menus, place orders, make QR-based payments, give feedback, and interact with a chatbot.  
@@ -57,6 +58,11 @@ Each house has its own curated menu and theme.
 ### Backend
 - Local Storage
 - `server.js` for in website intergrated openai chatbot
+### note
+- for every item adder the cart window may be occupying most of the spaces
+- so u can press "x" button in top right corner for every time , the cart will remain same until u give the "clear cart option"
+- it will be fixed by next update
+- Cheers :)
 
 ---
 
